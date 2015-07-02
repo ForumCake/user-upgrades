@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="Cake_UserUpgrades" title="Cake/User Upgrades" version_string="1.0.0 Alpha 1" version_id="1000030" url="https://forumcake.com/" install_callback_class="Cake\UserUpgrades\Install_Controller" install_callback_method="install" uninstall_callback_class="" uninstall_callback_method="">
+  <admin_navigation>
+    <navigation navigation_id="ipnRules" parent_navigation_id="userUpgrades" display_order="2100" link="ipn-rules" admin_permission_id="userUpgrade" debug_only="0" hide_no_children="0"/>
+  </admin_navigation>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="cake_paypal_ipn_rule_delete_userupgrades"><![CDATA[<xen:title>{xen:phrase cake_confirm_deletion_of_paypal_ipn_rule_userupgrades}: {$payPalIpnRule.title}</xen:title>
+
+<xen:h1>{xen:phrase cake_confirm_deletion_of_paypal_ipn_rule_userupgrades}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb href="{xen:adminlink 'ipn-rules/edit', $payPalIpnRule}">{$payPalIpnRule.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:require css="delete_confirmation.css" />
+
+<xen:form action="{xen:adminlink 'ipn-rules/delete', $payPalIpnRule}" class="deleteConfirmForm formOverlay">
+	<p>{xen:phrase cake_please_confirm_want_to_delete_paypal_ipn_rule_userupgrades}:</p>
+	<strong><a href="{xen:adminlink 'ipn-rules/edit', $payPalIpnRule}">{$payPalIpnRule.title}</a></strong>
+
+	<xen:submitunit save="{xen:phrase cake_delete_paypal_ipn_rule_userupgrades}" />
+
+	<input type="hidden" name="_xfConfirm" value="1" />
+</xen:form>]]></template>
+    <template title="cake_paypal_ipn_rule_edit_userupgrades"><![CDATA[<xen:title>{xen:if '{$payPalIpnRule.paypal_ipn_rule_id}', '{xen:phrase cake_edit_paypal_ipn_rule_userupgrades}: {$payPalIpnRule.title}', '{xen:phrase cake_create_new_paypal_ipn_rule_userupgrades}'}</xen:title>
+
+<xen:h1>{xen:if '{$payPalIpnRule.paypal_ipn_rule_id}', '{xen:phrase cake_edit_paypal_ipn_rule_userupgrades}: <em>{$payPalIpnRule.title}</em>', '{xen:phrase cake_create_new_paypal_ipn_rule_userupgrades}'}</xen:h1>
+
+<xen:if is="{$payPalIpnRule.paypal_ipn_rule_id}">
+	<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink 'ipn-rules'}#{xen:helper listitemid, $payPalIpnRule.paypal_ipn_rule_id}">{$payPalIpnRule.title}</xen:breadcrumb>
+	</xen:navigation>
+</xen:if>
+
+<xen:form action="{xen:adminlink 'ipn-rules/save', $payPalIpnRule}" class="AutoValidator" data-redirect="on">
+	<xen:textboxunit label="{xen:phrase title}:" name="title" value="{$payPalIpnRule.title}" data-liveTitleTemplate="{xen:if {$payPalIpnRule.paypal_ipn_rule_id},
+		'{xen:phrase cake_edit_paypal_ipn_rule_userupgrades}: <em>%s</em>',
+		'{xen:phrase cake_create_new_paypal_ipn_rule_userupgrades}: <em>%s</em>'}" />
+
+	<xen:textboxunit label="{xen:phrase cake_item_name_userupgrades}:" explain="{xen:phrase cake_item_name_explain_userupgrades}" name="item_name" value="{$payPalIpnRule.item_name}" />
+
+	<xen:selectunit label="{xen:phrase cake_user_upgrade_userupgrades}:" name="user_upgrade_id" value="{$payPalIpnRule.user_upgrade_id}">
+		<xen:foreach loop="$userUpgrades" key="$userUpgradeId" value="$userUpgrade">
+			<xen:option value="{$userUpgradeId}">{$userUpgrade.title} ({$userUpgrade.costPhrase})</xen:option>
+		</xen:foreach>
+	</xen:selectunit>
+	
+	<xen:checkboxunit label="">
+		<xen:option label="{xen:phrase cake_match_username_to_custom_value_userupgrades}" hint="{xen:phrase cake_if_unchecked_payer_email_will_be_matched_instead_userupgrades}" name="match_username" selected="{$payPalIpnRule.match_username}" />
+		<xen:option label="{xen:phrase cake_match_amount_userupgrades}" hint="{xen:phrase cake_if_checked_amount_currency_must_agree_user_upgrade_userupgrades}" name="match_amount" selected="{$payPalIpnRule.match_amount}" />
+	</xen:checkboxunit>
+
+	<xen:submitunit>
+		<input type="submit" name="saveexit" value="{xen:phrase save_and_exit}" accesskey="e" class="button primary" id="saveExitButton" />
+		<input type="submit" name="reload" value="{xen:phrase save_changes}" accesskey="s" class="button" id="saveReloadButton" data-ajaxvalue="{xen:phrase save_all_changes}" />
+		<xen:if is="{$payPalIpnRule.paypal_ipn_rule_id}">
+			<input type="button" value="{xen:phrase cake_delete_paypal_ipn_rule_userupgrades}..." accesskey="d" class="button OverlayTrigger"
+				data-href="{xen:adminlink ipn-rules/delete, $payPalIpnRule}" />
+		</xen:if>
+	</xen:submitunit>
+</xen:form>]]></template>
+    <template title="cake_paypal_ipn_rule_list_userupgrades"><![CDATA[<xen:title>{xen:phrase cake_paypal_ipn_rules_userupgrades}</xen:title>
+
+<xen:h1>{xen:phrase cake_paypal_ipn_rules_userupgrades}</xen:h1>
+
+<xen:description>{xen:phrase cake_rules_for_the_alternative_callback_ipn_processor_userupgrades}</xen:description>
+
+<xen:topctrl>
+    <a href="{xen:adminlink 'ipn-rules/add'}" class="button">+ {xen:phrase cake_create_new_paypal_ipn_rule_userupgrades}</a>
+</xen:topctrl>
+
+<xen:require css="filter_list.css" />
+<xen:require js="js/xenforo/filter_list.js" />
+
+<xen:form action="{xen:adminlink 'ipn-rules/toggle'}" class="section AutoValidator">
+
+    <xen:if is="{$payPalIpnRules}">
+        <h2 class="subHeading">
+            <xen:include template="filter_list_controls" />
+            {xen:phrase cake_paypal_ipn_rules_userupgrades}
+        </h2>
+
+        <ol class="FilterList">
+            <xen:foreach loop="$payPalIpnRules" key="$paypalIpnRuleId" value="$payPalIpnRule">
+                <xen:listitem id="{$paypalIpnRuleId}"
+                    label="{$payPalIpnRule.title}"
+                    snippet="{$payPalIpnRule.upgrade_title}"
+                    href="{xen:adminlink 'ipn-rules/edit', $payPalIpnRule}"
+                    delete="{xen:adminlink 'ipn-rules/delete', $payPalIpnRule}"
+                    deletehint="{xen:phrase delete}">
+                </xen:listitem>
+            </xen:foreach>
+        </ol>
+
+        <p class="sectionFooter">{xen:phrase showing_x_of_y_items, 'count=<span class="FilterListCount">{xen:count $payPalIpnRules}</span>', 'total={xen:count $payPalIpnRules}'}</p>
+
+    <xen:else />
+        <div class="noResults">{xen:phrase cake_there_are_no_paypal_ipn_rules_userupgrades}</div>
+    </xen:if>
+
+</xen:form>
+
+<xen:form action="{xen:adminlink 'options/save'}" class="AutoValidator OptIn">
+	<h3 class="subHeading">{xen:phrase payment_gateway_setup}</h3>
+
+	<xen:foreach loop="$renderedOptions" value="$renderedOption">
+		{xen:raw $renderedOption}
+	</xen:foreach>
+
+	<xen:submitunit save="{xen:phrase save}" />
+</xen:form>]]></template>
+  </admin_templates>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="load_class_model" execute_order="10" callback_class="Cake\UserUpgrades\SalesTax\Listener" callback_method="loadClass" active="1" hint="XenForo_Model_UserUpgrade" description=""/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <option option_id="cake_userUpgrades_salesTax_automaticTax" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="cake" display_order="1"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="admin_navigation_ipnRules" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[PayPal IPN Rules]]></phrase>
+    <phrase title="cake_userUpgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[User Upgrades]]></phrase>
+    <phrase title="option_cake_userUpgrades_salesTax_automaticTax" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Allow automatic calculation of sales tax/VAT]]></phrase>
+    <phrase title="option_cake_userUpgrades_salesTax_automaticTax_explain" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[With this option enabled, you will be able to set your sales tax/VAT rates in PayPal. See <a href="https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/ProfileAndTools/#id08A9ED00LTU">this guide</a>. For compliance with the 2015 EU VAT regulations, check out this list of <a href="http://www.vatlive.com/vat-rates/european-vat-rates/eu-vat-rates/">European Union VAT rates</a>.]]></phrase>
+    <phrase title="cake_confirm_deletion_of_paypal_ipn_rule_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Confirm Deletion of PayPal IPN Rule]]></phrase>
+    <phrase title="cake_create_new_paypal_ipn_rule_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Create New PayPal IPN Rule]]></phrase>
+    <phrase title="cake_delete_paypal_ipn_rule_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Delete PayPal IPN Rule]]></phrase>
+    <phrase title="cake_edit_paypal_ipn_rule_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Edit PayPal IPN Rule]]></phrase>
+    <phrase title="cake_paypal_ipn_rules_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[PayPal IPN Rules]]></phrase>
+    <phrase title="cake_paypal_ipn_rule_not_found_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[The PayPal IPN Rule could not be found.]]></phrase>
+    <phrase title="cake_please_confirm_want_to_delete_paypal_ipn_rule_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Please confirm you want to delete the following PayPal IPN Rule]]></phrase>
+    <phrase title="cake_rules_for_the_alternative_callback_ipn_processor_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Rules for the payment_gateway.php PayPal Instant Payment Notification processor.]]></phrase>
+    <phrase title="cake_there_are_no_paypal_ipn_rules_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[There are no PayPal IPN Rules.]]></phrase>
+    <phrase title="cake_item_name_explain_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[This is the name of the purchased item that is expected in the Instant Payment Notification. Leave blank if item name is not required to be checked for this rule.]]></phrase>
+    <phrase title="cake_item_name_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Item Name]]></phrase>
+    <phrase title="cake_match_amount_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Match amount]]></phrase>
+    <phrase title="cake_match_username_to_custom_value_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[Match username to custom value]]></phrase>
+    <phrase title="cake_if_checked_amount_currency_must_agree_user_upgrade_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[If checked, the amount and currency paid must always agree with the amount and currency specified in the user upgrade.]]></phrase>
+    <phrase title="cake_if_unchecked_payer_email_will_be_matched_instead_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[If unchecked, the payer's email address will be matched instead.]]></phrase>
+    <phrase title="cake_user_upgrade_userupgrades" version_id="1000030" version_string="1.0.0 Alpha 1"><![CDATA[User Upgrade]]></phrase>
+  </phrases>
+  <route_prefixes>
+    <route_type type="admin">
+      <prefix original_prefix="ipn-rules" class="Cake\UserUpgrades\PayPalIpnRules\Route_PrefixAdmin_IpnRules" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
+  <style_properties/>
+  <templates/>
+  <public_template_modifications/>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
