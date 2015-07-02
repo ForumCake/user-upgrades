@@ -19,4 +19,9 @@ class Install_Controller
         
         \Cake\Install_Controller::install($existingAddOn, $addOnData, $xml);
     }
+
+    public static function uninstall(array $addOnData)
+    {
+        \Cake\Install_Controller::uninstall($addOnData);
+    }
 }
